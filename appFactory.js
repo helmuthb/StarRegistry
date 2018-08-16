@@ -53,14 +53,14 @@ function createApp(db) {
       return;
     }
     if (!v.validateSignature(data.signature)) {
-      // failure
+      // failure: send error message
       res.send({
         registerStar: false,
         status: {
           address: v.address,
           requestTimeStamp: v.requestTimeStamp,
           message: v.message,
-          validationWindow: v.validationWindow,
+          validationWindow: v.remainingWindow(),
           messageSignature: 'invalid'
         }
       });
@@ -77,7 +77,7 @@ function createApp(db) {
         address: v.address,
         requestTimeStamp: v.requestTimeStamp,
         message: v.message,
-        validationWindow: v.validationWindow,
+        validationWindow: v.remainingWindow(),
         messageSignature: 'valid'
       }
     });

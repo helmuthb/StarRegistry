@@ -37,7 +37,7 @@ class Validation {
   /**
    * Get remaining validation window
    */
-  _remainingWindow() {
+  remainingWindow() {
     return (this.requestTimeStamp + this.validationWindow) - now();
   }
 
@@ -45,7 +45,7 @@ class Validation {
    * Update validation request
    */
   update() {
-    this.validationWindow = this._remainingWindow();
+    this.validationWindow = this.remainingWindow();
     this.requestTimeStamp = now();
     this.message = this._message();
   }
@@ -55,7 +55,7 @@ class Validation {
    * @returns true if still active, false if expired
    */
   isActive() {
-    return this._remainingWindow() >= 0;
+    return this.remainingWindow() >= 0;
   }
 
   /**

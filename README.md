@@ -13,6 +13,12 @@ npm install
 ```
 This installs the dependencies of the project.
 
+### Run automated tests
+```
+npm test
+```
+This runs a suite of automated tests of the project.
+
 ### Start API server
 ```
 npm start

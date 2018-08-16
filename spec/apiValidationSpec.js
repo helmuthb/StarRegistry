@@ -96,6 +96,8 @@ describe('API Validation Service', () => {
   const stepValidate = (callback) => {
     const privateKey = wif.decode(keyPair.toWIF()).privateKey;
     const signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+    // wait 2 seconds
+    jasmine.clock().tick(2000);
     supertest(app)
       .post('/message-signature/validate')
       .set('Content-Type', 'application/json')
@@ -105,11 +107,14 @@ describe('API Validation Service', () => {
         expect(response.body.registerStar).toBe(true, 'Validation should succeed');
         expect(response.body.status).toBeDefined('A status should be part of the response');
         expect(response.body.status.messageSignature).toBe('valid', 'Signature should be verified');
+        expect(response.body.status.validationWindow).not.toBe(300, 'Validation window should have decreased');
       })
       .end(callback);
   };
 
   const stepValidateWrong = (callback) => {
+    // wait 2 seconds
+    jasmine.clock().tick(2000);
     supertest(app)
       .post('/message-signature/validate')
       .set('Content-Type', 'application/json')
@@ -118,7 +123,8 @@ describe('API Validation Service', () => {
         // switching to Jasmine expect
         expect(response.body.registerStar).toBe(false, 'Validation should fail');
         expect(response.body.status).toBeDefined('A status should be part of the response');
-        expect(response.body.status.messageSignature).toBe('invalid', 'Signature should be verified');
+        expect(response.body.status.messageSignature).toBe('invalid', 'False signature should be detected');
+        expect(response.body.status.validationWindow).not.toBe(300, 'Validation window should have decreased');
       })
       .end(callback);
   };
